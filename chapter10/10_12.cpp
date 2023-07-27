@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include "../chapter7/Sales_data.h"
+#include <sstream>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+
+bool compareIsbn(const Sales_data &sales_data1, const Sales_data &sales_data2)
+{
+  return sales_data1.isbn() < sales_data2.isbn();
+}
+
+int main()
+{
+  vector<string> v1;
+
+  ifstream is("../chapter8/book");
+  string buf;
+
+  if (!is)
+  {
+    cerr << "open error" << endl;
+    return -1;
+  }
+
+  while (getline(is, buf))
+    v1.push_back(buf);
+
+  vector<Sales_data> v2;
+  for (const auto &s : v1)
+  {
+    // cout << s << endl;
+    istringstream iss(s);
+    v2.push_back(Sales_data(iss));
+  }
+
+  stable_sort(v2.begin(), v2.end(), compareIsbn);
+
+  for (const auto s : v2)
+    cout << s.isbn() << endl;
+
+  return 0;
+}
